@@ -1,0 +1,38 @@
+YAML path,Description
+,example-node1-bmh-secret & assisted-deployment-pull-secret need to be created under same namespace example-sno
+spec.clusters.0.installConfigOverrides,"installConfigOverrides is a generic way of passing install-config
+parameters through the siteConfig.  The 'capabilities' field configures
+the composable openshift feature.  In this 'capabilities' setting, we
+remove all but the marketplace component from the optional set of
+components.
+Notes:
+- NodeTuning is needed for 4.13 and later, not for 4.12 and earlier"
+spec.clusters.0.clusterLabels,"It is strongly recommended to include crun manifests as part of the additional install-time manifests for 4.13+.
+The crun manifests can be obtained from source-crs/optional-extra-manifest/ and added to the git repo ie.sno-extra-manifest.
+extraManifestPath: sno-extra-manifest"
+spec.clusters.0.clusterLabels.common,"These example cluster labels correspond to the bindingRules in the PolicyGenTemplate examples in ../policygentemplates:
+../policygentemplates/common-ranGen.yaml will apply to all clusters with 'common: true'"
+spec.clusters.0.clusterLabels.group-du-sno,"../policygentemplates/group-du-sno-ranGen.yaml will apply to all clusters with 'group-du-sno: """"'"
+spec.clusters.0.clusterLabels.sites,"../policygentemplates/example-sno-site.yaml will apply to all clusters with 'sites: ""example-sno""'
+Normally this should match or contain the cluster name so it only applies to a single cluster"
+spec.clusters.0.nodes,"Optionally; This can be used to override the KlusterletAddonConfig that is created for this cluster:
+#crTemplates:
+ KlusterletAddonConfig: ""KlusterletAddonConfigOverride.yaml"""
+spec.clusters.0.nodes.0.bmcAddress,"Optionally; This can be used to configure desired BIOS setting on a host:
+#biosConfigRef:
+ filePath: ""example-hw.profile"""
+spec.clusters.0.nodes.0.bootMode,Use UEFISecureBoot to enable secure boot
+spec.clusters.0.nodes.0.cpuset,"example of diskPartition below is used for image registry (check ImageRegistry.md for more details), but it's not limited to this use case
+       diskPartition:
+         - device: /dev/disk/by-id/wwn-0x11111000000asd123 # match rootDeviceHints
+           partitions:
+             - mount_point: /var/imageregistry
+               size: 102500
+               start: 344844
+allocate partitions for persist storage used by HTTP transport subscription data for PTP and BMER operators.
+disk id and and size needs to be adjusted to the hardware
+ignitionConfigOverride: '{""ignition"":{""version"":""3.2.0""},""storage"":{""disks"":[{""device"":""/dev/disk/by-id/wwn-0x11111000000asd123"",""wipeTable"":false,""partitions"":[{""sizeMiB"":16,""label"":""httpevent1"",""startMiB"":350000},{""sizeMiB"":16,""label"":""httpevent2"",""startMiB"":350016}]}],""filesystem"":[{""device"":""/dev/disk/by-partlabel/httpevent1"",""format"":""xfs"",""wipeFilesystem"":true},{""device"":""/dev/disk/by-partlabel/httpevent2"",""format"":""xfs"",""wipeFilesystem"":true}]}}'"
+spec.clusters.0.nodes.0.cpuset,match the value with PerformanceProfile's .spec.cpu.reserved for workload partitioning. See /example/policygentemplates/group-du-sno-ranGen.yaml
+spec.clusters.0.nodes.0.nodeNetwork.config.interfaces.0.ipv6.address.0,"For SNO sites with static IP addresses, the node-specific,
+API and Ingress IPs should all be the same and configured on
+the interface"

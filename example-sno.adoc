@@ -1,0 +1,13 @@
+[id="example-sno"]
+= Overview of example-sno SiteConfig CR
+
+[NOTE]
+====
+The following field descriptions are generated from link:https://github.com/openshift-kni/cnf-features-deploy/blob/release-4.13/ztp/gitops-subscriptions/argocd/example/siteconfig/example-sno.yaml[example/siteconfig/example-sno.yaml]
+====
+
+.example-sno SiteConfig CR fields
+[cols="1,3", options="header", format=csv]
+|====
+include::example-sno.csv[]
+|====
